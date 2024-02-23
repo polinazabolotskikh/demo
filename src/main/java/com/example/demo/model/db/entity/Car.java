@@ -1,7 +1,9 @@
 package com.example.demo.model.db.entity;
 
-import com.example.demo.model.enums.Gender;
-import com.example.demo.model.enums.UserStatus;
+import com.example.demo.model.enums.CarStatus;
+import com.example.demo.model.enums.CarType;
+import com.example.demo.model.enums.Color;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,29 +12,26 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Table(name="users")
+@Table(name="cars")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class User {
+public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
+    String brand;
+    String model;
+    Color color;
+    Integer year;
+    Long price;
 
-    String email;
-    String password;
-    @Column(name = "first_name")
-    String firstName;
-    @Column(name = "last_name")
-    String lastName;
-    @Column(name = "middle_name")
-    String middleName;
-    Integer age;
-    @Enumerated(EnumType.STRING)
-    Gender gender;
+    @Column(name="is_new")
+    Boolean isNew;
+    CarType type;
+
     @Column(name = "created_at")
     LocalDateTime createdAt;
 
@@ -40,9 +39,9 @@ public class User {
     LocalDateTime updatedAt;
 
     @Enumerated(EnumType.STRING)
-    UserStatus status;
+    CarStatus status;
 
-    @OneToMany
-    @JsonManagedReference(value="driver_cars")
-    List<Car> cars;
+    @ManyToOne
+    @JsonBackReference(value="driver_cars")
+    User user;
 }
